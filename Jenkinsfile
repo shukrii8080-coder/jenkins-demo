@@ -3,6 +3,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -18,7 +19,11 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat 'sonar-scanner.bat -Dsonar.projectKey=SACCO-Mobile-Banking-App -Dsonar.projectName="SACCO Mobile Banking App" -Dsonar.sources=src'
+                    script {
+                        def scannerHome = tool 'SonarScanner'
+
+                        bat "\"${scannerHome}\\bin\\sonar-scanner.bat\" -Dsonar.projectKey=SACCO-Mobile-Banking-App -Dsonar.projectName=\"SACCO Mobile Banking App\" -Dsonar.sources=src"
+                    }
                 }
             }
         }
